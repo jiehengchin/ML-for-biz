@@ -55,7 +55,7 @@ Each chart has a plain-language "How to read the chart below" box, and each note
 - `CholCheck` ("had a cholesterol check") looks predictive only as an artefact and is excluded from the short form.
 
 ## How to run
-You need Python 3.9 or newer and the three CSV files in the same folder as the notebooks (download them from the Kaggle "Diabetes Health Indicators Dataset"; see `DATASET.md`).
+You need Python 3.10 or newer and the three CSV files in the same folder as the notebooks (download them from the Kaggle "Diabetes Health Indicators Dataset"; see `DATASET.md`).
 
 ```bash
 # 1. (optional) create an isolated environment, using venv or conda
