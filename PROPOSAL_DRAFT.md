@@ -87,8 +87,8 @@ Share with diabetes or prediabetes, by indicator (overall base rate 15.8%):
 **Ordinal indicators**
 - **GenHlth:** rises steadily from 3.2% (excellent) to 40.8% (poor), a 13x spread.
 - **Age:** rises from 1.7% (age 18 to 24) to a peak of about 24% at ages 70 to 79, then eases slightly in the oldest band.
-- **Income:** falls from 27.5% (lowest bracket) to 9.1% (highest).
-- **Education:** falls from 28.2% (lowest) to 11.1% (college graduate).
+- **Income:** 27.5% in the lowest bracket, peaks at 29.2% in the second, then falls steadily to 9.1% (highest).
+- **Education:** peaks at 33.2% (elementary), then falls to 11.1% (college graduate). The lowest group (28.2%) has only 174 respondents.
 
 **Correlation with binary Y (Pearson)**
 
@@ -106,8 +106,8 @@ Share with diabetes or prediabetes, by indicator (overall base rate 15.8%):
 2. **BMI is non-linear.** Risk is low and flat below 25, then climbs about 7 to 10 points per band above. A banded or tree-based treatment will fit better than a straight line.
 3. **Self-rated general health is the single best predictor.** It likely also reflects existing disease, so it is partly a consequence of diabetes rather than a cause, which matters for how we interpret it.
 4. **Income and education matter, but they are proxies.** They are the likely vehicle for social-determinant effects and may be unsuitable for direct pricing (regulatory and fairness concerns).
-5. **Some effects look wrong and need care.** Heavy drinkers show *lower* diabetes rates. This is likely confounding or a "sick quitter" effect (people with diabetes avoid alcohol), not a causal benefit. We should not reward drinking in pricing.
-6. **Weak features.** Sex, AnyHealthcare and Fruits have little marginal signal and are candidates to drop for a short-form questionnaire.
+5. **Some effects look wrong and need care.** Heavy drinkers show *lower* diabetes rates, in every age and health group (the 18-39 gap is small). They report better health (12.0% vs 17.5% fair/poor), but that does not close the gap. The cause is unresolved: confounding or a "sick quitter" effect (people with diabetes avoid alcohol) is possible but untested, and it is not a causal benefit. We should not reward drinking in pricing.
+6. **Weak features.** AnyHealthcare and Fruits have little signal. Sex is weak on its own (1.1x) and adds little in the model (about the same as income), so all are candidates to drop from a short-form questionnaire.
 7. **Correlation is not causation.** The survey is a single cross-section, so we show association with diabetes status, not that an indicator *causes* diabetes or future claims.
 
 ### 2.5 Where the rest is
@@ -134,15 +134,15 @@ Charts are in `EDA.ipynb` and `FINAL.ipynb`; models are in `MODEL.ipynb`, `MODEL
 | High blood pressure | 27% vs 7% (3.8x) | Strongest actionable factor |
 | BMI 30 or more | 26% vs 10% for BMI under 30 (24% at BMI 30-35 and 34% above 35, vs about 7% at 18.5-25) | Risk is flat below 25, then climbs |
 | High cholesterol | 25% vs 9% (2.7x) | Medical, objective |
-| Heart disease, stroke, difficulty walking | 2.3x to 2.8x | Medical, often already priced |
+| Heart disease, stroke, difficulty walking | 2.3x to 2.8x on their own; add little to the model once BMI, age, BP and general health are known | Medical, often already priced |
 | Age | about 2% at 18 to 24, about 24% at 70 to 79 | Strong, but age-based pricing may be regulated |
 
 Risk compounds: diabetes rate rises from 2.7% (0 risk flags) to 62% (6 flags).
 
 **Strong predictors not to price on directly**
-- **Income and education:** the gap persists within every BMI and blood-pressure group, so it is not only a medical proxy, and pricing on it raises fairness and regulatory risk.
+- **Income and education:** the income gap persists within every BMI, blood-pressure and age group, so it is not only a medical or age proxy, and pricing on it raises fairness and regulatory risk. (Education shows the same gradient but was not tested separately. In the model, income and education add little once the five short-form questions are known.)
 - **General health:** partly a consequence of illness already present.
-- **Heavy drinking:** associated with lower diabetes rates in every age and health group, unexplained. Do not reward it.
+- **Heavy drinking:** associated with lower diabetes rates in every age and health group, unexplained (heavy drinkers report better health, but the gap holds within each health level). Do not reward it.
 
 **Recommendation**
 1. Use a 5-question short form (blood pressure, cholesterol, BMI, age, general health). Dropping general health lowers AUC from 0.815 to 0.786, so it is worth keeping even though it partly reflects existing illness.

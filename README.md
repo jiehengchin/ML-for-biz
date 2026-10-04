@@ -11,7 +11,7 @@ Diabetes drives large claims costs, but many cases are undiagnosed (about 1 in 5
 ## Answer in brief
 - **Indicators that most justify a higher premium:** high blood pressure (3.8x as likely), high cholesterol (2.7x), BMI 30+ (26% vs 10%), heart disease/stroke/difficulty walking (2.3x to 2.8x), and age (strong, but age-based pricing is often regulated).
 - **Risk compounds:** diabetes rate goes from 2.7% with 0 risk flags to 62% with all 6.
-- **Strong predictors not to price on directly:** income and education (the gap persists after medical controls, so pricing on it penalises poorer people), general health (partly a symptom of existing illness), heavy drinking (lower rate in every age group, unexplained, so no discount), and sex (adds almost nothing).
+- **Strong predictors not to price on directly:** income and education (the income gap persists after controlling for BMI, blood pressure and age, so pricing on it penalises poorer people; education shows the same gradient but was not tested separately), general health (partly a symptom of existing illness), heavy drinking (lower rate in every age group, unexplained, so no discount), and sex (adds little, about the same as income). Note that in the model, once BMI, age, blood pressure and general health are known, income, sex, heart disease, stroke and difficulty walking all add little.
 - **The model works moderately well:** XGBoost reaches AUC 0.82. A 5-question form (BMI, general health, age, cholesterol, blood pressure) reaches 0.815 against 0.824 for all 21 questions. Without general health it drops to 0.786.
 - **It tiers people, it does not diagnose them:** at the assumed cost it catches about 80% of diabetics, but only about a third of the people it flags have diabetes. Don't apply a flat loading to everyone flagged.
 
@@ -31,9 +31,9 @@ Each chart has a plain-language "How to read the chart below" box, and each note
 
 ## What each notebook does
 
-**`EDA.ipynb`**: shows that Y is imbalanced; compares diabetes rates with vs without each indicator; plots rate by BMI, age, health, income and education; tests whether age or health explain the lower rate among heavy drinkers (they don't); shows risk stacking by number of flags; and checks whether income matters after controlling for BMI.
+**`EDA.ipynb`**: shows that Y is imbalanced; compares diabetes rates with vs without each indicator; plots rate by BMI, age, health, income and education; tests whether age or health explain the lower rate among heavy drinkers (they don't; heavy drinkers report better health, but the gap persists within each health level); shows risk stacking by number of flags; and checks whether income matters after controlling for BMI.
 
-**`MODEL.ipynb`**: compares logistic regression, random forest and gradient boosting against a dummy model. Handles imbalance with class weights, tunes the cut-off from an assumed cost, recalibrates the probabilities, and ranks indicators. Best model: gradient boosting, test AUC 0.828.
+**`MODEL.ipynb`**: compares logistic regression, random forest and gradient boosting against a dummy model. Handles imbalance with class weights, tunes the cut-off from an assumed cost, recalibrates the probabilities, and ranks indicators. Best model: gradient boosting, test AUC 0.828 (slightly optimistic: this notebook uses a random split, so duplicate answer profiles can sit in both train and test; the profile-based split in `MODEL2`/`FINAL` gives 0.824).
 
 **`MODEL2.ipynb`**: applies SMOTE (synthetic extra diabetic examples, training data only) and compares it with class weights for four algorithms, then ensembles all of them. **Result:** SMOTE did not help; class weights tie or win for every algorithm, and the ensembles do not beat the best single model (XGBoost with class weights).
 
