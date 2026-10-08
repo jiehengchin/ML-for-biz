@@ -33,7 +33,7 @@ Each chart has a plain-language "How to read the chart below" box, and each note
 
 **`EDA.ipynb`**: shows that Y is imbalanced; compares diabetes rates with vs without each indicator; plots rate by BMI, age, health, income and education; tests whether age or health explain the lower rate among heavy drinkers (they don't; heavy drinkers report better health, but the gap persists within each health level); shows risk stacking by number of flags; and checks whether income matters after controlling for BMI.
 
-**`MODEL.ipynb`**: compares logistic regression, random forest and gradient boosting against a dummy model. Handles imbalance with class weights, tunes the cut-off from an assumed cost, recalibrates the probabilities, and ranks indicators. Best model: gradient boosting, test AUC 0.828 (slightly optimistic: this notebook uses a random split, so duplicate answer profiles can sit in both train and test; the profile-based split in `MODEL2`/`FINAL` gives 0.824).
+**`MODEL.ipynb`**: compares logistic regression, random forest and gradient boosting against a dummy model. Handles imbalance with class weights, tunes the cut-off from an assumed cost, recalibrates the probabilities, and ranks indicators. Best model: gradient boosting, test AUC 0.828 (slightly optimistic: this notebook uses a random split, so duplicate answer profiles can sit in both train and test; the same model on the profile-based split in `MODEL2` gives 0.823, though that split also trains on less data).
 
 **`MODEL2.ipynb`**: applies SMOTE (synthetic extra diabetic examples, training data only) and compares it with class weights for four algorithms, then ensembles all of them. **Result:** SMOTE did not help; class weights tie or win for every algorithm, and the ensembles do not beat the best single model (XGBoost with class weights).
 
@@ -42,7 +42,7 @@ Each chart has a plain-language "How to read the chart below" box, and each note
 ## Method notes
 - **Target:** Y = prediabetes or diabetes (binary), because prediabetes alone is only 1.8% of the data.
 - **Imbalance (about 16% positive):** judged on ROC-AUC and PR-AUC, not accuracy (a model saying "nobody has diabetes" is 84% accurate and useless). Handled with stratified splits, class weights and threshold tuning.
-- **Train/test integrity:** the file has 23,899 duplicate rows, and 1,834 identical answer profiles carry conflicting labels. `MODEL2.ipynb` and `FINAL.ipynb` split by answer profile so identical respondents never appear in both train and test. Feature rankings are computed on training or validation data, never on the test set.
+- **Train/test integrity:** the file has 23,899 duplicate rows, and 1,804 identical answer profiles carry conflicting yes/no labels. `MODEL2.ipynb` and `FINAL.ipynb` split by answer profile so identical respondents never appear in both train and test. Feature rankings are computed on training or validation data, never on the test set.
 - **Calibration:** class-weighted scores over-predict risk (mean 0.39 vs actual 0.16), so we recalibrate with isotonic regression before turning a score into a tier.
 - **Cost assumption:** a missed diabetic costs 5x a false alarm. **This is an assumption**, to be replaced with real claims data.
 

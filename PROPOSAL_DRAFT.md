@@ -79,10 +79,10 @@ Share with diabetes or prediabetes, by indicator (overall base rate 15.8%):
 | BMI | Diabetes rate |
 |---|---|
 | Under 18.5 | 6.3% |
-| 18.5 to 25 | 7.3% |
-| 25 to 30 | 14.5% |
-| 30 to 35 | 23.7% |
-| Over 35 | 33.8% |
+| 18.5 to 25 | 6.7% |
+| 25 to 30 | 13.0% |
+| 30 to 35 | 21.7% |
+| 35 and over | 33.0% |
 
 **Ordinal indicators**
 - **GenHlth:** rises steadily from 3.2% (excellent) to 40.8% (poor), a 13x spread.
@@ -103,7 +103,7 @@ Share with diabetes or prediabetes, by indicator (overall base rate 15.8%):
 
 ### 2.4 What the exploration tells us
 1. **Clinical conditions dominate.** High blood pressure, high cholesterol, obesity and prior cardiac events show the biggest jumps. These are objective, medically relevant and the strongest candidates for premium loading.
-2. **BMI is non-linear.** Risk is low and flat below 25, then climbs about 7 to 10 points per band above. A banded or tree-based treatment will fit better than a straight line.
+2. **BMI is non-linear.** Risk is low and flat below 25, then climbs about 6 to 11 points per band above. A banded or tree-based treatment will fit better than a straight line.
 3. **Self-rated general health is the single best predictor.** It likely also reflects existing disease, so it is partly a consequence of diabetes rather than a cause, which matters for how we interpret it.
 4. **Income and education matter, but they are proxies.** They are the likely vehicle for social-determinant effects and may be unsuitable for direct pricing (regulatory and fairness concerns).
 5. **Some effects look wrong and need care.** Heavy drinkers show *lower* diabetes rates, in every age and health group (the 18-39 gap is small). They report better health (12.0% vs 17.5% fair/poor), but that does not close the gap. The cause is unresolved: confounding or a "sick quitter" effect (people with diabetes avoid alcohol) is possible but untested, and it is not a causal benefit. We should not reward drinking in pricing.
@@ -118,7 +118,7 @@ Charts are in `EDA.ipynb` and `FINAL.ipynb`; models are in `MODEL.ipynb`, `MODEL
 ## 3. Modelling Approach and Results
 
 - **Imbalance:** about 16% positive, so we used stratified splits, class weights, PR-AUC and ROC-AUC (not accuracy), threshold tuning and calibration.
-- **Train/test integrity:** the file has 23,899 duplicate rows and 1,834 identical answer profiles with conflicting labels, so we split by answer profile. No profile appears in more than one split.
+- **Train/test integrity:** the file has 23,899 duplicate rows and 1,804 identical answer profiles with conflicting yes/no labels, so we split by answer profile. No profile appears in more than one split.
 - **SMOTE:** applied to training data only. It did not help: class weights scored equal or better for every algorithm (XGBoost PR-AUC 0.455 vs 0.441).
 - **Models:** logistic regression, random forest, HistGradientBoosting and XGBoost, plus rank-averaged ensembles. All score ROC-AUC 0.814 to 0.824. Ensembles do not beat the best single model.
 - **Best model:** XGBoost with class weights, isotonic-calibrated (mean predicted risk 0.155 vs actual 0.156).
@@ -132,7 +132,7 @@ Charts are in `EDA.ipynb` and `FINAL.ipynb`; models are in `MODEL.ipynb`, `MODEL
 | Indicator | Evidence | Pricing view |
 |---|---|---|
 | High blood pressure | 27% vs 7% (3.8x) | Strongest actionable factor |
-| BMI 30 or more | 26% vs 10% for BMI under 30 (24% at BMI 30-35 and 34% above 35, vs about 7% at 18.5-25) | Risk is flat below 25, then climbs |
+| BMI 30 or more | 26% vs 10% for BMI under 30 (22% at BMI 30-35 and 33% at 35+, vs about 7% at 18.5-25) | Risk is flat below 25, then climbs |
 | High cholesterol | 25% vs 9% (2.7x) | Medical, objective |
 | Heart disease, stroke, difficulty walking | 2.3x to 2.8x on their own; add little to the model once BMI, age, BP and general health are known | Medical, often already priced |
 | Age | about 2% at 18 to 24, about 24% at 70 to 79 | Strong, but age-based pricing may be regulated |
